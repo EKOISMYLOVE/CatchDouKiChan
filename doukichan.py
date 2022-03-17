@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 # Load env
 load_dotenv()
 bearer_token = os.getenv("BEARER_TOKEN")
-#chatid = os.getenv("CHATID")
+##chatid = os.getenv("CHATID")
 
 def bearer_oauth(r):
 
