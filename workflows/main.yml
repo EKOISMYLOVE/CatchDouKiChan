@@ -1,0 +1,93 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  schedule:
+    - cron: '0 0 * * 1'
+  #push:
+  #  branches: [ main ]
+  #pull_request:
+  #  branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  # workflow_dispatch: 
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Pull
+        run: |
+          git pull
+
+      - name: Export Variables
+        env:
+          BEARER_TOKEN: ${{ secrets.TWITTER_BEARER_TOKEN }}
+        run: |
+          echo "BEARER_TOKEN=$BEARER_TOKEN" >> .env
+          echo "CHATID=$TELEGRAM_TO" >> .env
+
+#      - name: Run parser
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+          architecture: 'x64'
+      - run : |
+          pip install python-dotenv
+          pip install requests
+          python tawawa.py
+
+      - name: update tweet
+        run: |
+          cat ./tweet
+          git config --global user.email "EKOISMYLOVE@gmail.com"
+          git config --global user.name "EKOISMYLOVE"
+          git add tweet
+          git commit -m "Update Tweet."
+          git push -f
+
+  send:
+    needs: build
+    runs-on: ubuntu-latest
+    if: needs.build.result == 'success'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Read file
+        id: tweet
+        run: |
+          git pull
+          echo "::set-output name=result::$(cat ./tweet)"
+
+      - name: send notice notification
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: 好色注意
+
+      - name: send tweet content for telegram message
+        uses: appleboy/telegram-action@master
+        # These are environments secrets.
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: ${{ steps.tweet.outputs.result }} 本週の tawawa
+
+
+      # Runs a set of commands using the runners shell
+      #- name: Run a multi-line script
+      #  run: |
+      #    echo Add other actions to build,
+      #    echo test, and deploy your project.
+
