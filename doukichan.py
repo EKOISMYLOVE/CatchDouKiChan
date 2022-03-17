@@ -47,8 +47,7 @@ def delete_all_rules(rules):
 
 def set_rules(delete):
 	sample_rules = [
-#    	{"value": "月曜日のたわわ　その from:y_o_m_y_o_m"},
-		{"value" : "from:WeiWeiDev"}
+    	{"value" : "from:y_o_m_y_o_m"},
 	]
 	payload = {"add": sample_rules}
 	response = requests.post(
