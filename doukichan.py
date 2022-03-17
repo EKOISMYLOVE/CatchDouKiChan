@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 # Load env
 load_dotenv()
 bearer_token = os.getenv("BEARER_TOKEN")
-chatid = os.getenv("CHATID")
+#chatid = os.getenv("CHATID")
 
 def bearer_oauth(r):
 
@@ -23,7 +23,7 @@ def get_rules():
         raise Exception(
             "Cannot get rules (HTTP {}): {}".format(response.status_code, response.text)
         )
-    #print(json.dumps(response.json()))
+    print(json.dumps(response.json()))
     return response.json()
 
 def delete_all_rules(rules):
@@ -43,11 +43,12 @@ def delete_all_rules(rules):
                 response.status_code, response.text
             )
         )
-    #print(json.dumps(response.json()))
+    print(json.dumps(response.json()))
 
 def set_rules(delete):
 	sample_rules = [
-    	{"value": "月曜日のたわわ　その from:Strangestone"},
+#    	{"value": "月曜日のたわわ　その from:y_o_m_y_o_m"},
+		{"value" : "from:WeiWeiDev"}
 	]
 	payload = {"add": sample_rules}
 	response = requests.post(
@@ -59,7 +60,7 @@ def set_rules(delete):
 		raise Exception(
 			"Cannot add rules : {} {}".format(response.status_code, response.text)
 		)
-	#print(json.dumps(response.json()))
+	print(json.dumps(response.json()))
 
 def get_stream(set):
 	tweet_fields = "tweet.fields=public_metrics,entities"
@@ -76,7 +77,7 @@ def get_stream(set):
 		if response_line:
 			json_response = json.loads(response_line)
 			# print(json.dumps(json_response, indent=4, sort_keys=True))
-			if "RT " not in json_response["data"]["text"] and "月曜日のたわわ　その" in json_response["data"]["text"]:
+			if "RT " not in json_response["data"]["text"]:
 				print(json_response["data"]["text"])
 				fp = open("tweet", "w")
 				fp.write(json_response["data"]["text"])
