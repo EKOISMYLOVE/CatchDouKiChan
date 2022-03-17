@@ -46,7 +46,7 @@ jobs:
       - run : |
           pip install python-dotenv
           pip install requests
-          python tawawa.py
+          python doukichan.py
 
       - name: update tweet
         run: |
