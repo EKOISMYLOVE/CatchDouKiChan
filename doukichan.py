@@ -2,6 +2,7 @@ import json
 import requests
 import json
 import os
+import time
 from dotenv import load_dotenv
 
 # Load env
@@ -87,7 +88,11 @@ def main():
 	rules = get_rules()
 	delete = delete_all_rules(rules)
 	set = set_rules(delete)
-	get_stream(set)
+	try:
+		get_stream(set)
+	except:
+		time.sleep(300)
+		get_stream(set)
 
 if __name__ == "__main__":
 	main()
