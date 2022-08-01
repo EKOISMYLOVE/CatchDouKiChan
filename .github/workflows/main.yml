@@ -74,7 +74,7 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: 本週の同期ちゃん
+          message: 今週の同期ちゃん
 
       - name: send tweet content for telegram message
         uses: appleboy/telegram-action@master
