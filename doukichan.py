@@ -11,7 +11,6 @@ bearer_token = os.getenv("BEARER_TOKEN")
 ##chatid = os.getenv("CHATID")
 
 def bearer_oauth(r):
-
 	r.headers["Authorization"] = f"Bearer {bearer_token}"
 	r.headers["User-Agent"] = "v2FilteredStreamPython"
 	return r
